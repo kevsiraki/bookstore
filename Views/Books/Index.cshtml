@@ -1,0 +1,92 @@
+<!-- Views/Books/Index.cshtml -->
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "View Books";
+}
+
+<head>
+    <title>@ViewData["Title"]</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        main {
+            flex: 1;
+        }
+
+        .book-details td {
+            vertical-align: middle;
+        }
+
+        .action-buttons {
+            margin-top: 10px;
+        }
+
+        .container {
+            flex: 1;
+            margin-bottom: auto; /* Push the footer to the bottom */
+        }
+
+        .footer {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5 mb-4">Books</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <p class="text-center">
+                    <a href="/Books/Create" class="btn btn-primary">Create New</a>
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Book</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="book-details">
+                                        <td>
+                                            <strong>Title:</strong> @item.Title <br />
+                                            <strong>Author:</strong> @item.Author <br />
+                                            <strong>Genre:</strong> @item.Genre <br />
+                                            <strong>Price:</strong> @string.Format("{0:F2}", item.Price) <br />
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="/Books/Details/@item.Id" class="btn btn-sm btn-info">Details</a>
+                                            </div>
+                                            @if (User.Identity.IsAuthenticated && item.OwnerId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                                            {
+                                                <div class="action-buttons">
+                                                    <a href="/Books/Edit/@item.Id" class="btn btn-sm btn-primary">Edit</a>
+                                                </div>
+                                                <div class="action-buttons">
+                                                    <a href="/Books/Delete/@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer"></footer>
+</body>
+

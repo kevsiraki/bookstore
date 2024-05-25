@@ -1,0 +1,83 @@
+# Ignore NuGet packages
+*.nuget.props
+*.nuget.targets
+packages/
+*.nupkg
+*.dll
+*.exe
+
+# Ignore build output
+bin/
+obj/
+
+# Ignore user-specific files and settings
+*.user
+*.suo
+*.cache
+*.vscode
+.vs/
+
+# Ignore Visual Studio files
+*.sln
+*.csproj.user
+*.ide
+*.pidb
+*.suo
+*.sln.docstates
+
+# Ignore ReSharper files
+_ReSharper*/
+*.ReSharper*
+*.DotSettings
+
+# Ignore Rider files
+.idea/
+
+# Ignore build and publish files
+publish/
+publish-output/
+*.Publish.xml
+
+# Ignore macOS metadata files
+.DS_Store
+
+# Ignore generated files
+*.log
+
+# Ignore debug files
+debug.log
+
+# Ignore generated documentation
+docs/
+
+# Ignore local database file
+*.mdf
+*.ldf
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore npm debugging log file
+npm-debug.log*
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore cache files
+*.cache
+
+# Ignore .NET Core tools
+.project
+
+# Ignore development specific files
+appsettings.Development.json
+
+# Ignore sensitive or environment-specific configuration files
+appsettings.json
+
+# Ignore scaffolding readme
+ScaffoldingReadMe.txt
+
+# Ignore user-generated files
+BookStore.csproj

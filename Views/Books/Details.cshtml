@@ -1,0 +1,43 @@
+<!-- Views/Books/Details.cshtml -->
+@model BookStore.Models.Book
+
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<h1>Book Details</h1>
+
+<div>
+    <h4>@Model.Title</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Title
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Title
+        </dd>
+        <dt class="col-sm-2">
+            Author
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Author
+        </dd>
+        <dt class="col-sm-2">
+            Genre
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Genre
+        </dd>
+        <dt class="col-sm-2">
+            Price
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a href="/Books/Edit/@Model.Id">Edit</a> |
+    <a href="/Books">Back to List</a>
+</div>
