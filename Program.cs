@@ -10,6 +10,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using BookStore.Services;
 using System;
 using BookStore.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +33,52 @@ builder.Services.AddTransient<IEmailSender, EmailSender>(i =>
         smtpPass: builder.Configuration["EmailSettings:SmtpPass"]
     )
 );
+
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+    options.Secure = CookieSecurePolicy.Always; // Ensure cookies are only sent over HTTPS
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+})
+.AddGoogle(options =>
+{
+    IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+    options.ClientId = googleAuthNSection["ClientId"];
+    options.ClientSecret = googleAuthNSection["ClientSecret"];
+    options.Events = new Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents
+    {
+        OnRemoteFailure = context =>
+        {
+            var referer = context.Request.Headers["Referer"].ToString();
+            var redirectUri = string.IsNullOrEmpty(referer) ? "/" : referer;
+            context.Response.Redirect(redirectUri);
+            context.HandleResponse();
+            return Task.CompletedTask;
+        }
+    };
+})
+.AddMicrosoftAccount(options =>
+{
+    IConfigurationSection microsoftAuthNSection = builder.Configuration.GetSection("Authentication:Microsoft");
+    options.ClientId = microsoftAuthNSection["ClientId"];
+    options.ClientSecret = microsoftAuthNSection["ClientSecret"];
+    options.Events = new Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents
+    {
+        OnRemoteFailure = context =>
+        {
+            var referer = context.Request.Headers["Referer"].ToString();
+            var redirectUri = string.IsNullOrEmpty(referer) ? "/" : referer;
+            context.Response.Redirect(redirectUri);
+            context.HandleResponse();
+            return Task.CompletedTask;
+        }
+    };
+});
 
 // Configure MySQL connection from configuration
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -53,6 +104,7 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<BookContext>();
         context.Database.Migrate(); // Apply migrations
+        //context.SeedData(); // Seed the data
     }
     catch (Exception ex)
     {
@@ -72,7 +124,6 @@ else
     app.UseHsts();
 }
 
-//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -87,7 +138,6 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "identity",
     pattern: "Identity/{controller=Account}/{action=Manage}/{id?}");
-
 
 app.MapRazorPages();
 

@@ -5,6 +5,15 @@
     ViewData["ActivePage"] = ManageNavPages.ExternalLogins;
 }
 
+@{
+    Dictionary<string, string> providerLogos = new Dictionary<string, string>
+    {
+        { "Google", "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" },
+        { "Facebook", "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" },
+        { "Microsoft", "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" }
+    };
+}
+
 <partial name="_StatusMessage" for="StatusMessage" />
 @if (Model.CurrentLogins?.Count > 0)
 {
@@ -45,9 +54,13 @@
             <p>
                 @foreach (var provider in Model.OtherLogins)
                 {
-                    <button id="@($"link-login-button-{provider.Name}")" type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                    <button id="@($"link-login-button-{provider.Name}")" type="submit" class="btn btn-outline-primary btn-lg" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                        <img src="@providerLogos.GetValueOrDefault(provider.Name)" alt="@provider.DisplayName Logo" style="height: 20px; margin-right: 5px;">
+                        @provider.DisplayName
+                    </button>
                 }
             </p>
         </div>
     </form>
 }
+

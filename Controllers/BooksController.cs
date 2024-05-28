@@ -75,27 +75,27 @@ namespace BookStore.Controllers
             {
                 return NotFound();
             }
-
+        
             var currentUser = await _userManager.GetUserAsync(User);
             var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id && m.OwnerId == currentUser.Id);
             if (book == null)
             {
                 return NotFound();
             }
-
+        
             return View(book);
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Author,Genre,Price")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Author,Genre,Price,OwnerId")] Book book)
         {
             if (id != book.Id)
             {
                 return NotFound();
             }
-
+        
             if (ModelState.IsValid)
             {
                 try
@@ -118,6 +118,7 @@ namespace BookStore.Controllers
             }
             return View(book);
         }
+
 
         [Authorize]
         public async Task<IActionResult> Delete(int? id)

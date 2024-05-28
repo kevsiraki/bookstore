@@ -25,5 +25,8 @@ namespace BookStore.Models
 
         // Add the OwnerId property
         public string OwnerId { get; set; }
+
+        // Navigation property for the owner
+        public ApplicationUser Owner { get; set; }
     }
 }
