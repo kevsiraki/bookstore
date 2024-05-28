@@ -1,5 +1,7 @@
 <!-- Views/Books/Index.cshtml -->
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "View Books";
@@ -58,8 +60,13 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
+                                    var user = await UserManager.FindByIdAsync(item.OwnerId);
+                                    string ownerUsername = user != null ? user.UserName : "Unknown";
+
                                     <tr class="book-details">
                                         <td>
+                                            <small><strong>Added By:</strong> @ownerUsername</small>
+                                            <br>
                                             <strong>Title:</strong> @item.Title <br />
                                             <strong>Author:</strong> @item.Author <br />
                                             <strong>Genre:</strong> @item.Genre <br />

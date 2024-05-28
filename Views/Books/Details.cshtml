@@ -1,5 +1,6 @@
-<!-- Views/Books/Details.cshtml -->
 @model BookStore.Models.Book
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Book Details";
@@ -9,6 +10,14 @@
 
 <div>
     <h4>@Model.Title</h4>
+    <small>
+        <strong>Added By:</strong>
+        @{
+            var user = await UserManager.FindByIdAsync(Model.OwnerId);
+            string ownerUsername = user != null ? user.UserName : "Unknown";
+        }
+        @ownerUsername
+    </small>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -35,6 +44,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Price)
         </dd>
+
     </dl>
 </div>
 <div>
